@@ -38,6 +38,12 @@ app.get('/', (req, res) => {
             console.error('Database query error:', error.message);
             return res.send('Error Retrieving students');
         }
+         // Format each dob into yyyy-mm-dd
+        results.forEach(student => {
+            const d = new Date(student.dob);
+            student.dob = d.toISOString().split("T")[0]; 
+            // Example: "2007-05-08"
+        });
         // Render HTML page with data
         res.render('index', { student: results });
     });
@@ -53,10 +59,16 @@ app.get('/student/:id', (req, res) => {
             console.error('Database query error:', error.message);
             return res.send('Error Retrieving student by ID');
         }
-        // Check if any student with the given ID was found
+        
         if (results.length > 0) {
+            // Format the dob for the found student
+            const d = new Date(results[0].dob);
+            results[0].dob = d.toISOString().split("T")[0];
             // Render HTML page with the student data
             res.render('student', { student: results[0] });
+        
+
+    
         } else {
             // If no student with the given ID was found
             res.send('Student not found');
