@@ -96,5 +96,59 @@ app.post('/addStudent', (req, res) => {
     });
 });
 
+//define route to retrieve a single student by their id and render it in the HTML page for editing
+app.get('/editStudent/:id', (req, res) => {
+    const studentId = req.params.id;
+    const sql = 'SELECT * FROM student WHERE studentId = ?';
+    // Fetch data from MySQL based on the student ID
+    connection.query(sql, [studentId], (error, results) => {
+        if (error) {
+            console.error('Database query error:', error.message);
+            return res.send('Error retrieving student by ID');
+        }
+        // Check if any student with the given ID was found
+        if (results.length > 0) {
+            // Render HTML page with the student data
+            res.render('editStudent', { student: results[0] });
+        } else {
+            // If no student with the given ID was found, render a 404 page or handle it accordingly
+            res.send('Student not found');
+        }
+    });
+});
+//define route to handle the form submission for editing a student
+app.post('/editStudent/:id', (req, res) => {
+    const studentId = req.params.id;
+    // Extract student data from the request body
+    const { name, dob, contact } = req.body;
+    const sql = 'UPDATE student SET name = ? , dob = ?, contact = ? WHERE studentId = ?';
+    // Insert the new product into the database
+    connection.query(sql, [name, quantity, price, productId], (error, results) => {
+        if (error) {
+            // Handle any error that occurs during the database operation
+            console.error("Error updating product:", error);
+            res.send('Error updating product');
+        } else {
+            // Send a success response
+            res.redirect('/');
+        }
+    });
+});
+//define route to handle the deletion of a product by its id
+app.get('/deleteProduct/:id', (req, res) => {
+  const productId = req.params.id;
+  const sql = 'DELETE FROM products WHERE productId = ?';
+  connection.query( sql , [productId], (error, results) => {
+    if (error) {
+      // Handle any error that occurs during the database operation
+      console.error("Error deleting product:", error);
+      res.send('Error deleting product');
+    } else {
+      // Send a success response
+      res.redirect('/');
+    }
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port http://localhost:${PORT}`)); 
