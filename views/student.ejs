@@ -1,47 +1,61 @@
-<!-- product.ejs -->
+<!-- student.ejs -->
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Student List App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= student.name %> - Student Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body>
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/">Student List App</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="/addStudent">Add new student</a>
-              </li> 
-            </ul>
-          </div>
-        </div>
-    </nav>
-    
-    <div class="container">
-        <br>
-        <div class="text-center"><h2>Student Details</h2></div>
-        <br>
-        <% if (student) { %> <!-- Check if student data exists -->
-            <div>
-                <p><b>Student Name:</b><br> <%= student.name %></p>
-                <p><b>Date of Birth:</b><br> <%= student.dob %></p>
-                <p><b>Contact Number:</b><br> <%= student.contact %></p>
-                <p><b>Image:</b><br> <img src = "<%= student.image %>" width="20%"></p>
-            </div>
-        <% } else { %>
-            <p>No student found.</p>
-        <% } %>
-        <a href ="/">Back</a>
+
+<body class="bg-light">
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Student List App</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-    
+  </nav>
+
+  <!-- Student Details -->
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <% if (student) { %>
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h3 class="mb-0">Student Details</h3>
+            </div>
+            <div class="card-body text-center">
+              <img src="/images/<%= student.image %>" alt="<%= student.name %>" class="img-fluid rounded mb-3" style="max-height:200px;">
+              <h4><%= student.name %></h4>
+              <p><strong>Date of Birth:</strong> <%= new Date(student.dob).toISOString().split('T')[0] %></p>
+              <p><strong>Contact:</strong> <%= student.contact %></p>
+
+              <div class="d-grid gap-2 mt-3">
+                <a href="/editStudent/<%= student.studentId %>" class="btn btn-warning">Edit</a>
+                <a href="/deleteStudent/<%= student.studentId %>" class="btn btn-danger"
+                   onclick="return confirm('Are you sure you want to delete this student?')">Delete</a>
+                <a href="/" class="btn btn-secondary">Back to List</a>
+              </div>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="alert alert-warning text-center">
+            <h5>No student found.</h5>
+            <a href="/" class="btn btn-secondary mt-3">Back to Home</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
+
